@@ -1,0 +1,9 @@
+def cloud_session_generator():
+def session_generator():
+
+  =>these two methods are used generate session to the cloud and dc jira instance 
+
+=>and return instance jiradc and jiracloud 
+
+=>authenticate use the environment variable Jira URL, Jira api token (Cloud and DC)
+
