@@ -1,0 +1,113 @@
+jira_cloud = cloudsessiongenerator.cloud_session_generator()
+jira_dc = dcsessiongenerator.session_generator()
+
+jira dc and jira cloud intialized by the session generator method in session genetor. py file 
+
+-authentication done by the session generator and returns the jira object 
+
+-dc_issues = linkparent.dc_issue_list()
+
+getting all list of issue from DC from dc_issue_List() from link parent 
+
+
+def get_versions():
+
+=>this method returns  the versions  from the DC
+
+def getfields():
+return the cloud filed list and dc field list 
+o/p:
+
+   "Issue Type":{
+      "custom":false,
+      "id":"issuetype",
+      "name":"Issue Type",
+      "schema":"issuetype"
+   }
+
+
+def get_saas_issues(project_key):
+- return the cloud issue for searching the issues use the JQL 
+
+def get_id_based_on_saas_field_name(field_name):
+def get_id_based_on_DC_field_name(field_name):
+
+-these two methods returns the field id from the field list
+   "Sprint":{
+      "custom":true,
+      "id":"customfield_10100",
+      "name":"Sprint",
+      "schema":"com.atlassian.jira.plugin.system.customfieldtypes:textarea"
+   }
+if field name sprint exists in the saas or DC field list then returns the id "id":"customfield_10100"
+
+
+def formating_issue_fields(fields, custom_field_Values): 
+
+- this method is used for the formating the issue  field.
+-if field  that exists in skiplist and thats the custom field then format that according to the type of custom field
+also handle the date time format , watches
+
+customfiele type :
+=>casacading select       => format :com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect 
+
+{'customFieldValues': [{'fieldName': 'number field', 'value': '9090.0', 'fieldType': 'com.atlassian.jira.plugin.system.customfieldtypes:float'}
+
+
+
+def format_field_based_on_type(value,field_name=None):
+-this function handles the field value type 
+
+- return the value according to field type 
+
+
+if value_type == 'CustomFieldOption':
+            if hasattr(value, 'child'):
+                return {"id": value.id, "value": value.value, "child": format_field_based_on_type(value.child)}
+            return value.value
+
+this following condition is used to handle the customfield with option
+
+
+format_comment_body_with_usernames(comment_body, jira_cloud):
+
+this format the user name to the comment body
+
+ "comments": [
+                        {
+                            "created": "2025-09-04T14:56:00.105+0530",
+                            "author": "dharani@archimedis.io",
+                            "body": "\ud83c\udf89 Looks good!"
+                        }
+
+
+ for comment in comments:
+        formatted_body = format_comment_body_with_usernames(comment.body, jira_cloud)
+        author = comment.author.emailAddress if hasattr(comment.author, "emailAddress") else getattr(comment.author, "displayName", "Unknown")
+        issue_fields["comments"].append({"created": comment.created,"author": author,"body": formatted_body})
+
+this particular field is used to appent the comments to the issuefield
+
+
+
+for item in history.items:  
+    #         items.append({"field": item.field, "fromString": item.fromString, "toString": item.toString, "fieldType": item.fieldtype, "from": getattr(item, 'from'), "to": getattr(item, 'to')})
+    #     historyList.append({"created": history.created, "author": history.author.displayName,"items":items})
+    #     issue_fields["history"] = historyList
+
+this particular loop is used append the history from the cloud
+full history
+
+
+if issue.fields.issuetype is not None and issue.fields.issuetype.name == "Sub-task":
+    #     print(f"Skipping issue {issue.key} as it is a sub-task.")
+    #     subtasklink.format_sub_task_fields(issue, jira_cloud_field_list, jira_dc_field_list,jira_cloud,jira_dc,dc_issues)
+
+this is used for format the field type is subtask according to the issue.fields.issutype==subtask
+
+"issuetype":"Sub-task"=>subtasklink.format_sub_task_fields.
+
+
+
+
+
