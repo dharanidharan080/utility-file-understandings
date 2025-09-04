@@ -1,0 +1,110 @@
+def get_dc_issues():
+This method is used to get all issues from the DC .
+=>  url = f"{JIRA_DC_URL}/rest/api/2/search?jql=project in (MP) &startAt={start_at}"
+=> headers = {"Authorization": f"Bearer {dc_token}"}
+ http request using jira external api
+=>json_data- is intializied as the response of the following request
+=>for issue in json_data['issues']:
+                    print(f"issue is {issue['key']}")
+                    issues.append(issue)
+iterating to the (issue) field in json_data and append the issue in the issuess list
+
+=>then return the issues list
+
+
+
+def get_cloud_issues()
+=>this method is used to retrive the cloud issues
+
+ paginated_issues = jira_cloud.search_issues(f"project in (\'MP\')", startAt=start_at, maxResults=max_results, expand='names,schema,changelog')
+
+these following jql is used to retrive the issues from cloud
+appent in issues list
+return the issue list
+
+def dc_issue_list():
+this following method is used append the  dc issue into the list
+for dc_issue in dc_issues:
+        i=i+1
+        print(f" i is {i}  and issue value is {dc_issue['key']}  "  )
+        dc_issue_custom_field = dc_issue['fields']['customfield_10112']
+        dc_issues_list[dc_issue_custom_field] = dc_issue['key']
+        # dc_inner_list= {}
+        # dc_inner_list["key"] =  dc_issue['key']
+        # dc_inner_list["type"] = dc_issue['fields']['issuetype']['name']
+        # dc_inner_list["id"] = dc_issue['id']
+        # dc_issues_list[dc_issue_custom_field] = dc_inner_list
+        # dc_inner_list={}
+    return dc_issues_list
+these following loop iterate through the dc issues the get the issue list from external issue id , issue key,issuetype,custom field 
+-append the inner list into dc issues list and return the dc issues list
+
+
+
+def cloud_issue_list():
+-this following method is used for append the cloud issue in list
+
+for cloud_issue in cloud_issues:
+        cloud_inner_list = {}
+        cloud_inner_list["key"] = cloud_issue.key
+        cloud_inner_list["type"] = cloud_issue.fields.issuetype.name
+this following loop will iterate through cloud issue and get issue key and issuetype
+
+ 
+        if hasattr(cloud_issue.fields, 'parent'):
+            parent_key = cloud_issue.fields.parent.key
+            parent_key = re.split('-',parent_key)
+            if parent_key[0] in PROJECT_LIST:
+                cloud_inner_list["parentkey"] = cloud_issue.fields.parent.key
+                cloud_inner_list["parentid"] = cloud_issue.fields.parent.id
+these following line add the parent id and parent key from the parent field which exists in issue field
+
+
+
+
+if issuelinks:
+            cloud_inner_list["issuelinks"] = []
+            for link in issuelinks:
+                if hasattr(link, 'outwardIssue'):
+                    link_issue= re.split('-', link.outwardIssue.key)
+                    if link_issue[0] in PROJECT_LIST:
+                        cloud_inner_list["issuelinks"].append({"key":link.outwardIssue.key,"id":link.outwardIssue.id,"type":link.type.outward,"issuelinktype":"outward"})
+                elif hasattr(link, 'inwardIssue'):
+                    link_issue= re.split('-', link.inwardIssue.key)
+                    if link_issue[0] in PROJECT_LIST:
+                        cloud_inner_list["issuelinks"].append({"key":link.inwardIssue.key,"id":link.inwardIssue.id,"type":link.type.inward,"issuelinktype":"inward" })
+
+these following condition for getting the issue link , id , key, type, inward or outward issuelink
+
+return the cloud list along with parent and issue link fields
+
+
+
+def link_issue_and_create_sub_task():
+=>this function is for linking issue in dc 
+=>value from parentid and customfield parent id from jira dc 
+
+
+f 'parentid' in value and value['parentid'] is not None:
+            parent_key = value['parentid']  
+            parent_dc_details = dc_issues[parent_key]
+            print(parent_dc_details['key'])
+            print(dc_details['key'])
+            if value['type'] not in  ["Sub-task" , "Document"]:
+               jira_dc.add_issues_to_epic(parent_dc_details['id'],dc_details['key'])
+               print('else')
+               issuedetails = jira_dc.issue(dc_details['key'])
+               issuedetails.update(fields = {"customfield_10113":parent_dc_details['key']})
+
+=>iterate to the parent id and epic link 
+
+ if "issuelinks" in value:
+            issue_links = value['issuelinks']
+            for issue_link in issue_links:
+                issue_link_id=issue_link['id']
+                issue_link_key=dc_issues.get(issue_link_id,{}).get('key')
+                if issue_link_key:
+                  jira_dc.create_issue_link(issue_link['type'],dc_issues[issue_link['id']]['key'],dc_issues[key]['key'])
+
+=>from this following condition the issuelink to the following epic   
+
