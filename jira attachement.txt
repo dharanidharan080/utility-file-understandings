@@ -1,0 +1,34 @@
+
+start_at = 0
+max_results = 1000
+while True:
+    
+    new_issues = jira.search_issues("Project = " + project + " ORDER BY issueKey DESC", startAt=start_at, maxResults=max_results)
+    if not new_issues:
+        break
+    all_issues.extend(new_issues)
+    start_at += max_results
+
+=>getting the 100 issues from the jira saas and load in to the all_issuess
+
+for issue in all_issues:
+    attachment_dict = {}
+    print(issue.key)
+    issue_num = issue.key
+=>iterate to the issues and get the issue KEY
+
+issue = jira.issue(issue_num, fields='attachment')
+
+    attachments =  issue.fields.attachment
+  
+    for attachment in issue.fields.attachment:
+            try:
+                dir_path = os.path.join(os.getcwd(), project, issue_num)  # will return 'PROJECT/ISSUEKEY-XX'
+                os.makedirs(dir_path, exist_ok=True)  # create directory [current_path]/PROJECT/ISSUEKEY-XX
+                print(attachment.filename)
+                with open(os.path.join(dir_path, re.sub('[\\s+]', '', attachment.filename)), 'wb') as file:
+                    print("Saving file: " + str(file))
+                    file.write(attachment.get())
+
+getting the issues which has the attachement field 
+=>iterate to the attachement field and get the file and store in project key , issue key and attachment for the issue key in the class path 
