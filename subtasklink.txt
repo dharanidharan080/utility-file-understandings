@@ -1,0 +1,47 @@
+def create_subtask(issue_fields , jira_dc=None,issue=None,jira_cloud=None,dc_issues=None):
+
+=>this function is create the subtask in jira dc
+
+def format_sub_task_fields(issue, jira_cloud_field_list, jira_dc_field_list, jira_cloud=None,jira_dc=None,dc_issues=None):
+=>this function format the process field and create an subtask according to the field
+
+
+def process_field(field_name, field_value, issue, jira_cloud_field_list, jira_dc_field_list, issue_fields, jira_cloud,jira_dc):
+=>this function is for process the field
+=>get the custom field and values 
+=>if its not an custom field then process the field should_process_field(field_name, is_custom_field, clouddetails):
+
+
+def should_process_field(field_name, is_custom_field, clouddetails):
+=>if customfield is not exists and the field in the skip list return true
+
+
+def handle_non_none_field(field_name, field_value, clouddetails, is_custom_field, issue, issue_fields, jira_cloud,dcdetails,jira_dc):
+if it customfield return handle custom field funtion 
+
+else return system field handle 
+
+def handle_custom_field(field_name, field_value, clouddetails, issue_fields,dcdetails):
+it will handle the custom field type and format the value for the certain field type 
+
+def format_field_based_on_type(value, field_name,jira_dc):
+=>it is that format the field based on the field type 
+
+=>handle individual field
+'CustomFieldOption': _handle_custom_field_option,
+        'PropertyHolder': _handle_property_holder,
+        'User': _handle_user,
+        'Version': _handle_version,
+        'Component': _handle_component,
+        'TimeTracking': _handle_timetracking,
+        'Worklog': _handle_worklog,
+        'Watchers': _handle_watchers,
+        'Issue': _handle_issue,
+        'IssueLink': _handle_issuelink,
+        'Attachment': _handle_attachment,
+        'IssueType': _handle_common_type,
+        'Project': _handle_common_type,
+        'Status': _handle_common_type,
+        'Priority': _handle_common_type
+
+        these are they field handle methods that handle every custom and system field 
