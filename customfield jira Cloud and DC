@@ -25,6 +25,7 @@ custom field available in the DC :
 =>URL field
 =>check boxes
 
+SKIP_LIST=[customfield_10099,customfield_10088,customfield_10089,customfield_10091,customfield_10093,customfield_10094,customfield_10095,customfield_10098,customfield_10097] these custom field id from saas for the migration from cloud to DC
 =>these are the fields are been created in the jira cloud and jira DC
 =>debug dcfiled.py
 
