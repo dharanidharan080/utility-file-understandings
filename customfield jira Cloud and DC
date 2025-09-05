@@ -1,0 +1,122 @@
+custom field available in jira cloud:
+=>short text plain text only
+=>Text Field read only
+=>date picker
+=>date time picker
+=>number field
+=>labels
+=>radio button
+=>Select list cascading
+=>select list multiple choices
+=>user picker
+=>URL field
+=>checkboxe
+
+custom field available in the DC :
+=>Text Field read only
+=>date picker
+=>date time picker
+=>number field
+=>labels
+=>radio button
+=>Select list cascading
+=>select list multiple choices
+=>user picker
+=>URL field
+=>check boxes
+
+=>these are the fields are been created in the jira cloud and jira DC
+=>debug dcfiled.py
+
+def formating_issue_fields(fields, custom_field_Values): 
+=>with this function formating fields 
+
+=>if the field exist in skip list 
+=>format field based on that type , that value are been returned 
+
+=>using def format_field_based_on_type(value,field_name=None): this function 
+
+if isinstance(value, str):
+        return value
+    elif isinstance(value, list):
+        return [format_field_based_on_type(item, field_name) for item in value]
+    elif isinstance(value, dict):
+        return [ format_field_based_on_type(val) for key, val in value.items()]
+    elif isinstance(value, bool):
+        return value
+    elif isinstance(value, int):
+        return value
+    elif isinstance(value, float):
+        return value
+    else:
+        value_type = type(value).__name__
+        if value_type == 'CustomFieldOption':
+            if hasattr(value, 'child'):
+                return {"id": value.id, "value": value.value, "child": format_field_based_on_type(value.child)}
+
+field type are handled 
+
+and dump into the .json
+
+o/p:
+{
+    "projects": [
+        {
+            "key": "MP",
+            "issues": [
+                {
+                    "customFieldValues": [
+                        {
+                            "fieldName": "number field",
+                            "value": "9090.0",
+                            "fieldType": "com.atlassian.jira.plugin.system.customfieldtypes:float"
+                        },
+                        {
+                            "fieldName": "radio button",
+                            "value": "option 1",
+                            "fieldType": "com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons"
+                        },
+                        {
+                            "fieldName": "Select list cascading",
+                            "value": "option 1 - option1(option1)",
+                            "fieldType": "com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect"
+                        },
+                        {
+                            "fieldName": "select list multiple choices",
+                            "value": [
+                                "option 1"
+                            ],
+                            "fieldType": "com.atlassian.jira.plugin.system.customfieldtypes:multiselect"
+                        },
+                        {
+                            "fieldName": "url field",
+                            "value": "https://www.geeksforgeeks.org/",
+                            "fieldType": "com.atlassian.jira.plugin.system.customfieldtypes:url"
+                        },
+                        {
+                            "fieldName": "user picker",
+                            "value": "Dharani Dharan",
+                            "fieldType": "com.atlassian.jira.plugin.system.customfieldtypes:userpicker"
+                        },
+                        {
+                            "fieldName": "date picker",
+                            "value": "2025-09-03",
+                            "fieldType": "com.atlassian.jira.plugin.system.customfieldtypes:datepicker"
+                        },
+                        {
+                            "fieldName": "date time picker",
+                            "value": "03/Sep/25 01:30 AM",
+                            "fieldType": "com.atlassian.jira.plugin.system.customfieldtypes:datetime"
+                        }
+                    ],
+                    "key": "MP-1"
+                }
+            ],
+            "versions": []
+        }
+    ]
+}
+
+=>import this json in jira DC external system import
+
+=>then custom field value are been migrated to the jira DC.
